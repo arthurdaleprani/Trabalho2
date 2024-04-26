@@ -10,29 +10,29 @@ export default async function categories(app, options){
     const InvalidCategoriesError = createError('InvalidCategoriesError', 'Categoria Inválida.', 400);
     const generoGame = app.mongo.db.collection('generos');
 
-    
-    app.get('/generos',{
-    },
-    async(request, reply) => {
-        request.log.info(genero)
-        return await genero.find().toArray();
-    }
+    //funcionando
+    app.get('/generos',
+        {
+            config:{
+                logMe: true
+            }
+        },
+        async(request, reply) => {
+            request.log.info(genero)
+            return await genero.find().toArray();
+        }
+    );
 
-    )
-
-
+    //funcionando
     app.post('/generos',{
         schema: {
             body:{
                 type: 'object',
-                    properties:{
-                      id: {type:'integer'},
+                properties:{
                       name: {type:'string'},
-                     
-                     
-                    
+                      img_Url: {type: 'string'}
                 },
-                required: ['name']
+                required: ['name', 'img_Url']
             }
         },
         config: {
@@ -40,12 +40,13 @@ export default async function categories(app, options){
         }
     }, async(request, reply) => {
         let categorie = request.body;
+
         await genero.insertOne(categorie)
+
         return reply.code(201).send
+});
 
-})
-
-
+// concertar
 app.put('/generos/:id', async (request, reply) => {
     try {
         const nameGen = request.params.nameGen;
@@ -56,7 +57,6 @@ app.put('/generos/:id', async (request, reply) => {
                 type: 'object',
                 properties: {
                     nameGen: { type: 'integer' },
-
                 },
                 required: ['nameGen']
             }
@@ -80,6 +80,7 @@ app.put('/generos/:id', async (request, reply) => {
     }
 });
 
+// concertar
 app.delete('/generos/:name', async (request, reply) => {
     try {
         const name = request.params.name;
@@ -111,7 +112,7 @@ app.delete('/generos/:name', async (request, reply) => {
     }
 });
 
-
+// CONCERTAR
 app.get('/generos/:id/games', async (request, reply) => {
     try {
         let id = request.params.id;
@@ -145,5 +146,3 @@ app.get('/generos/:id/games', async (request, reply) => {
 });
 
 }
-
-

@@ -8,6 +8,7 @@ export default async function products(app, options) {
     const games = app.mongo.db.collection('games');
     const generos = app.mongo.db.collection('generos');
 
+    //funcionando
     app.get('/games', 
         {
             config: {
@@ -19,6 +20,15 @@ export default async function products(app, options) {
         }
     );
 
+    //não esta funcionando
+    app.get('/games/:id', async (request, reply) => {
+        let id =  request.params.id;
+        let game = await games.findOne({_id: new app.mongo.ObjectId(id)});
+        
+        return game;
+    });
+
+    //funcionando
     app.post('/games', {
         schema: {
             body: {
@@ -38,38 +48,25 @@ export default async function products(app, options) {
         }
     }, async (request, reply) => {
         let game = request.body;
-        
-        const generoExistente = await generos.findOne({ name: game.generoGame });
-        if (!generoExistente) {
-            return reply.status(400).send({ message: 'Gênero não encontrado' });
-        }
-    
-        game.generoId = generoExistente._id;
     
         await games.insertOne(game);
     
         return reply.code(201).send();
     });
 
-    app.get('/games/:id', async (request, reply) => {
-        let id =  request.params.id;
-        let games = await games.findOne({_id: new app.mongo.ObjectId(id)});
-        
-        return games;
-    });
-    
-    app.delete('/games/:name', {
+    //funcionando
+    app.delete('/games/:id', {
         config: {
             requireAuthentication: true
         }
     }, async (request, reply) => {
-        let name =  request.params.name;
+        let id =  request.params.id;
         
-        await games.deleteOne({name: new app.mongo.ObjectId(name)});
+        await games.deleteOne({_id: new app.mongo.ObjectId(id)});
         
         return reply.code(204).send();;
     });
-
+    // TESTAR
     app.put('/games/:id', {
         config: {
             requireAuthentication: true
