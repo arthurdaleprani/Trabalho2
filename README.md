@@ -5,4 +5,6 @@
 - Cada jogo tem uma nota, nome, descrição, como se fosse uma steam, mas sem a parte de compra.
 - Fizemos uma rota para poder criar usuarios, e outra de autenticação, onde o usuario pode se logar no sistema.
 - Executamos os testes de todas as rotas com sucesso.
+- Durante os estudos sobre authenticação usamos criptografia de senha usando o hash, para maior segurança.
+- Ultilizamos oque vimos em sala de aula, e oque foi pesquisado e estudo pela internet.
   
