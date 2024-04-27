@@ -43,4 +43,15 @@ export default async function newUser(app, options) {
         reply.code(201).send();
     });
 
+    app.delete('/register/:id', {
+        config: {
+            requireAuthentication: true
+        }
+    }, async (request, reply) => {
+        let id =  request.params.id;
+        
+        await users.deleteOne({_id: id});
+        
+        return reply.code(204).send();
+    });
 }

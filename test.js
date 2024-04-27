@@ -236,6 +236,22 @@ describe("## rota Register", async (t) =>{
         equal(response.statusCode, 201);
     });
 
+    test('#DELETE /register/1234', async (t) =>{
+        const app = await build(options);
+
+        t.after(async () =>{
+            await app.close();
+        });
+        const response = await app.inject({
+            method: 'DELETE',
+            url: '/register/1234',
+            headers: {
+                "x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBlZHJvIiwiaWF0IjoxNzE0MDcyOTM2fQ.Yce-z12kC6zoQLpigc2LYPQeytMf4Y6LwcQ0HSDTdl0"
+            }
+        });
+
+        equal(response.statusCode, 204);
+    });
 });
 
 // rota register (usuario ja existe)
