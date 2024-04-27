@@ -28,7 +28,7 @@ export default async function products(app, options) {
         }
     }, async (request, reply) => {
         let id =  request.params.id;
-        let game = await games.findOne({_id: new app.mongo.ObjectId(id)});
+        let game = await games.findOne({_id: id});
         
         return game;
     });
@@ -39,13 +39,13 @@ export default async function products(app, options) {
             body: {
                 type: 'object',
                 properties: {
-                    id: { type: 'integer' },
+                    _id: { type: 'string' },
                     name: { type: 'string' },
                     notaGame: { type: 'integer' },
                     generoGame: { type: 'string' },
                     descGame: { type: 'string' }
                 },
-                required: ['name', 'notaGame', 'generoGame', 'descGame']
+                required: ['_id','name', 'notaGame', 'generoGame', 'descGame']
             }
         },
         config: {
@@ -67,9 +67,9 @@ export default async function products(app, options) {
     }, async (request, reply) => {
         let id =  request.params.id;
         
-        await games.deleteOne({_id: new app.mongo.ObjectId(id)});
+        await games.deleteOne({_id: id});
         
-        return reply.code(204).send();;
+        return reply.code(204).send();
     });
     // funcionando
     app.put('/games/:id', {
@@ -80,13 +80,12 @@ export default async function products(app, options) {
         let id = request.params.id;
         let game = request.body;
 
-        await games.updateOne({_id: new app.mongo.ObjectId(id)},{
+        await games.updateOne({_id: id},{
             $set: {
                 name: game.name,
                 descGame: game.descGame
             }
         });
-    
         return reply.code(204).send();
     });
 }

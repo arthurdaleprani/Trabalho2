@@ -11,17 +11,18 @@ export default async function newUser(app, options) {
             body: {
                 type: 'object',
                 properties: {
+                    _id: {type: 'string'},
                     username: { type: 'string' },
                     password: { type: 'string' }
                 },
-                required: ['username', 'password']
+                required: ["_id",'username', 'password']
             }
         },
         config: {
             requireAuthentication: false
         },
     }, async (request, reply) => {
-        const { username, password } = request.body;
+        const { _id, username, password } = request.body;
 
         const existingUser = await users.findOne({ username });
 
@@ -33,11 +34,13 @@ export default async function newUser(app, options) {
         const hashedPassword = await hash(password, 10);
 
         const newUser = {
+            _id,
             username,
             password: hashedPassword
         };
         
-        const result = await users.insertOne(newUser);
+        await users.insertOne(newUser);
         reply.code(201).send();
     });
+
 }

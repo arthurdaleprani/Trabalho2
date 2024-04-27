@@ -9,7 +9,6 @@ export default async function categories(app, options){
     const generos = app.mongo.db.collection('generos')
     const products = app.mongo.db.collection('products')
     const InvalidCategoriesError = createError('InvalidCategoriesError', 'Categoria Inválida.', 400);
-    const generoGame = app.mongo.db.collection('generos');
 
     //funcionando
     app.get('/generos',
@@ -20,7 +19,7 @@ export default async function categories(app, options){
         },
         async(request, reply) => {
             request.log.info(genero)
-            return await genero.find().toArray();
+            return await generos.find().toArray();
         }
     );
 
@@ -31,7 +30,7 @@ export default async function categories(app, options){
         }
     }, async(request, reply) => {
         let id = request.params.id;
-        let genero = await generos.findOne({_id: new app.mongo.ObjectId(id)});
+        let genero = await generos.findOne({_id: id});
 
         return genero;
     });
@@ -42,11 +41,11 @@ export default async function categories(app, options){
             body:{
                 type: 'object',
                 properties:{
-                      id:{type: 'integer'},
+                      _id:{type: 'string'},
                       name: {type:'string'},
                       img_Url: {type: 'string'}
                 },
-                required: ['name', 'img_Url']
+                required: ['_id','name', 'img_Url']
             }
         },
         config: {
@@ -71,7 +70,7 @@ app.put('/generos/:id',{
     let id = request.params.id;
     let genero = request.body;
 
-    await generos.updateOne({_id: new app.mongo.ObjectId(id)},{
+    await generos.updateOne({id},{
         $set:{
             name: genero.name,
             img_Url: genero.img_Url
@@ -81,7 +80,7 @@ app.put('/generos/:id',{
     return reply.code(201).send();
 });
 
-// funcionando
+// 
 app.delete('/generos/:id',{
     config: {
         requireAuthentication: true
@@ -89,7 +88,7 @@ app.delete('/generos/:id',{
 }, async (request, reply) => {
     let id = request.params.id;
 
-    await generos.deleteOne({id: new app.mongo.ObjectId(id)});
+    await generos.deleteOne({_id: id});
 
     return reply.code(204).send();
 });
